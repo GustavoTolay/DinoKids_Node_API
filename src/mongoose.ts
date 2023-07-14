@@ -1,4 +1,4 @@
-import { Schema, model, connect } from "mongoose";
+import { Schema, model, connect, Types } from "mongoose";
 import * as dotenv from "dotenv";
 dotenv.config();
 import { User, Category, Transaction, newProduct } from "./types";
@@ -48,13 +48,25 @@ export const categoryModel = model<Category>("Categories", categorySchema);
 const transactionSchema = new Schema<Transaction>({
   detail: [
     {
-      product: String,
-      model: String,
-      size: String,
+      size_id: Types.ObjectId,
       price: Number,
     },
   ],
   date: { type: Date, default: Date.now() },
+  buyer_info: {
+    fullname: String,
+    ship_mode: String,
+    state: String,
+    locality: String,
+    street: String,
+    number: String,
+    apartment: String,
+    floor: String,
+    postal_code: Number,
+    email: String,
+    phone: String,
+    observations: String,
+  },
   state: String,
   total: Number,
 });

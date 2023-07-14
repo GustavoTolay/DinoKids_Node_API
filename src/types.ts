@@ -44,9 +44,7 @@ export type Category = {
 
 // Transactions
 type Detail = {
-  product: string;
-  model: string;
-  size: string;
+  size_id: string;
   price: number;
 };
 
@@ -59,16 +57,16 @@ type ShippingInfo = {
   state: string;
   locality: string;
   street: string;
-  number: number;
-  apartment: number;
-  floor: number;
+  number: string;
+  apartment?: string;
+  floor?: string;
   postal_code: number;
 };
 
 export type BuyerInfo = {
   fullname: string;
   email?: string;
-  phone?: number;
+  phone?: string;
   observations?: string;
 } & (ShippingInfo | WithdrawInfo);
 
