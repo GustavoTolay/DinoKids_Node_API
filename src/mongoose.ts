@@ -50,6 +50,7 @@ const transactionSchema = new Schema<Transaction>({
     {
       size_id: Types.ObjectId,
       price: Number,
+      quantity: Number
     },
   ],
   date: { type: Date, default: Date.now() },

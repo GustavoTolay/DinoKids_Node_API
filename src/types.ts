@@ -43,8 +43,9 @@ export type Category = {
 };
 
 // Transactions
-type Detail = {
+export type Detail = {
   size_id: string;
+  quantity: number;
   price: number;
 };
 
