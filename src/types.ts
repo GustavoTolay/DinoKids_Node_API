@@ -2,10 +2,11 @@ import {
   PreferenceItem,
   PreferenceShipment,
 } from "mercadopago/models/preferences/create-payload.model";
+import { Mixed } from "mongoose";
 
 // Product
 export interface Product {
-  _id: string;
+  _id?: string;
   name: string;
   description: string;
   image: string;
@@ -13,17 +14,20 @@ export interface Product {
   brand: string;
   available: boolean;
   category: string;
-  inventary: Inventary[];
+  inventory: Inventory[];
 }
 
-export type newProduct = Omit<Product, "_id">;
-
-type Inventary = {
+export type Inventory = {
+  _id?: string;
+  product_id: Mixed;
   model: string;
   sizes: Size[];
+  
 };
 
 export type Size = {
+  _id?: string;
+  inventory_id: Mixed;
   size: string;
   stock: number;
   weight: number;
@@ -31,6 +35,7 @@ export type Size = {
 
 // User
 export interface User {
+  _id?: string
   email: string;
   password: string;
   role: string;
@@ -38,12 +43,15 @@ export interface User {
 
 // Categories
 export type Category = {
+  _id?: string
   name: string;
   available: boolean;
 };
 
 // Transactions
 export type Detail = {
+  _id?: string
+  model_id: string;
   size_id: string;
   quantity: number;
   price: number;
@@ -65,6 +73,7 @@ type ShippingInfo = {
 };
 
 export type BuyerInfo = {
+  _id?: string
   fullname: string;
   email?: string;
   phone?: string;
@@ -72,6 +81,7 @@ export type BuyerInfo = {
 } & (ShippingInfo | WithdrawInfo);
 
 export type Transaction = {
+  _id?: string
   detail: Detail[];
   buyer_info: BuyerInfo;
   total: number;
@@ -83,4 +93,10 @@ export type Transaction = {
 export type PreferenceRequest = {
   items: PreferenceItem[];
   shipments?: PreferenceShipment;
+};
+
+// Request
+export type TransactionRequest = {
+  detail: Detail[];
+  buyer_info: BuyerInfo;
 };

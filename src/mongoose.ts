@@ -1,9 +1,29 @@
 import { Schema, model, connect, Types } from "mongoose";
 import * as dotenv from "dotenv";
 dotenv.config();
-import { User, Category, Transaction, newProduct } from "./types";
+import { User, Category, Transaction, Size, Product, Inventory } from "./types";
 
-const productSchema = new Schema<newProduct>({
+// Size
+const sizeSchema = new Schema<Size>({
+  inventory_id: { type: Types.ObjectId, ref: "Inventories" },
+  size: String,
+  stock: Number,
+  weight: Number,
+});
+
+export const sizeModel = model<Product>("Sizes", sizeSchema);
+
+// Inventory
+const inventorySchema = new Schema<Inventory>({
+  product_id: { type: Types.ObjectId, ref: "Products" },
+  model: String,
+  sizes: [{ type: Types.ObjectId, ref: "Sizes" }],
+});
+
+export const inventoryModel = model<Inventory>("Inventories", inventorySchema);
+
+// Product
+const productSchema = new Schema<Product>({
   name: String,
   description: String,
   image: String,
@@ -11,21 +31,15 @@ const productSchema = new Schema<newProduct>({
   brand: String,
   available: Boolean,
   category: String,
-  inventary: [
+  inventory: [
     {
       model: String,
-      sizes: [
-        {
-          size: String,
-          stock: Number,
-          weight: Number,
-        },
-      ],
+      sizes: [{ type: Types.ObjectId, ref: "Inventories" }],
     },
   ],
 });
 
-export const productModel = model<newProduct>("Products", productSchema);
+export const productModel = model<Product>("Products", productSchema);
 
 // user
 const userSchema = new Schema<User>({
@@ -49,8 +63,9 @@ const transactionSchema = new Schema<Transaction>({
   detail: [
     {
       size_id: Types.ObjectId,
+      model_id: Types.ObjectId,
       price: Number,
-      quantity: Number
+      quantity: Number,
     },
   ],
   date: { type: Date, default: Date.now() },
@@ -79,17 +94,17 @@ export const transactionModel = model<Transaction>(
 
 //database connect
 
-const uri = process.env.DATABASE_URI as string;
+const { DATABASE_AUTH, DATABASE_USER, DATABASE_PASS, DATABASE_URI } =
+  process.env;
+
+const uri = DATABASE_URI as string;
 
 export const DbConnect = async () => {
-  console.log(process.env.DATABASE_AUTH);
-  console.log(process.env.DATABASE_USER);
-  console.log(process.env.DATABASE_PASS);
-  console.log(process.env.DATABASE_URI);
+  console.log({ DATABASE_AUTH, DATABASE_USER, DATABASE_PASS, DATABASE_URI })
   await connect(uri, {
-    user: process.env.DATABASE_USER,
-    pass: process.env.DATABASE_PASS,
-    authSource: process.env.DATABASE_AUTH,
+    user: DATABASE_USER,
+    pass: DATABASE_PASS,
+    authSource: DATABASE_AUTH,
     dbName: "mystore",
   });
   console.log("connected with database");
