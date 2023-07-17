@@ -5,17 +5,17 @@ import { User, Category, Transaction, Size, Product, Inventory } from "./types";
 
 // Size
 const sizeSchema = new Schema<Size>({
-  inventory_id: { type: Types.ObjectId, ref: "Inventories" },
+  // inventory_id: { type: Types.ObjectId, ref: "Inventories" },
   size: String,
   stock: Number,
   weight: Number,
 });
 
-export const sizeModel = model<Product>("Sizes", sizeSchema);
+export const sizeModel = model<Size>("Sizes", sizeSchema);
 
 // Inventory
 const inventorySchema = new Schema<Inventory>({
-  product_id: { type: Types.ObjectId, ref: "Products" },
+  // product_id: { type: Types.ObjectId, ref: "Products" },
   model: String,
   sizes: [{ type: Types.ObjectId, ref: "Sizes" }],
 });
@@ -31,12 +31,7 @@ const productSchema = new Schema<Product>({
   brand: String,
   available: Boolean,
   category: String,
-  inventory: [
-    {
-      model: String,
-      sizes: [{ type: Types.ObjectId, ref: "Inventories" }],
-    },
-  ],
+  inventory: [{ type: Types.ObjectId, ref: "Inventories" }],
 });
 
 export const productModel = model<Product>("Products", productSchema);
@@ -66,6 +61,7 @@ const transactionSchema = new Schema<Transaction>({
       model_id: Types.ObjectId,
       price: Number,
       quantity: Number,
+      product_id: Types.ObjectId
     },
   ],
   date: { type: Date, default: Date.now() },
@@ -100,7 +96,7 @@ const { DATABASE_AUTH, DATABASE_USER, DATABASE_PASS, DATABASE_URI } =
 const uri = DATABASE_URI as string;
 
 export const DbConnect = async () => {
-  console.log({ DATABASE_AUTH, DATABASE_USER, DATABASE_PASS, DATABASE_URI })
+  console.log({ DATABASE_AUTH, DATABASE_USER, DATABASE_PASS, DATABASE_URI });
   await connect(uri, {
     user: DATABASE_USER,
     pass: DATABASE_PASS,
