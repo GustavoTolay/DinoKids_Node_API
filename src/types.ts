@@ -2,10 +2,10 @@ import {
   PreferenceItem,
   PreferenceShipment,
 } from "mercadopago/models/preferences/create-payload.model";
-import { Mixed } from "mongoose";
+// import { Mixed } from "mongoose";
 
 // Product
-export interface Product {
+export type Product = {
   _id?: string;
   name: string;
   description: string;
@@ -19,15 +19,15 @@ export interface Product {
 
 export type Inventory = {
   _id?: string;
-  product_id: Mixed;
+  // product_id: Mixed | string;
   model: string;
-  sizes: Size[];
+  sizes: Size[] | { _id: string }[];
   
 };
 
 export type Size = {
   _id?: string;
-  inventory_id: Mixed;
+  // inventory_id: Mixed | string;
   size: string;
   stock: number;
   weight: number;
@@ -50,8 +50,8 @@ export type Category = {
 
 // Transactions
 export type Detail = {
-  _id?: string
-  model_id: string;
+  _id?: string;
+  product_id: string;
   size_id: string;
   quantity: number;
   price: number;
@@ -97,6 +97,11 @@ export type PreferenceRequest = {
 
 // Request
 export type TransactionRequest = {
-  detail: Detail[];
+  detail: [{
+    price?: number,
+    size_id: string,
+    quantity: number,
+    product_id: number
+  }];
   buyer_info: BuyerInfo;
 };
