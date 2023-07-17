@@ -8,7 +8,7 @@ const options: Options = {
     openapi: "3.0.0",
     info: { title: "DinoKids API", version: "2.0.0" },
   },
-  apis: ["./src/routes/products.routes.ts"]
+  apis: ["./src/docs/*.yml"]
 };
 
 const swaggerSpec = swaggerJSDoc(options);
