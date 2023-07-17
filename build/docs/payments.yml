@@ -1,0 +1,59 @@
+/payment/create:
+  post:
+    summary: Verify stock and provides the Mercado Pago preference
+    tags:
+      - Payment
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema: 
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    quantity:
+                      type: number
+                    unit_price:
+                      type: number
+              shipments:
+                type: object
+                properties:
+                  mode:
+                    type: string
+                  cost:
+                    type: number
+/payment/feedback:
+  get:
+    summary: Give feedback about the payment result
+    tags:
+      - Payment
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Payment:
+                  type: string
+                Status:
+                  type: string
+                MerchantOrder:
+                  type: string
