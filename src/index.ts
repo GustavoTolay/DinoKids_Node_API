@@ -8,6 +8,7 @@ import cors from "cors";
 import * as dotenv from "dotenv";
 import path from "path";
 import swaggerDocs from "./docs/swagger";
+import transactionsRouter from "./routes/transactions.routes";
 
 dotenv.config();
 
@@ -48,7 +49,8 @@ app.get(
 app.use("/products", productsRouter);
 app.use("/auth", authRouter);
 app.use("/categories", categoriesRouter);
-app.use("/payment", paymentRouter)
+app.use("/payment", paymentRouter);
+app.use("/transactions", transactionsRouter)
 
 app.listen(PORT, () => {
   console.log(`server listening on port ${PORT}`);
