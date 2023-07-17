@@ -1,11 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { transactionModel } from "../mongoose";
-import { BuyerInfo, Detail } from "../types";
-
-type RequestBody = {
-  detail: Detail[];
-  buyer_info: BuyerInfo;
-};
+import { productModel, transactionModel } from "../mongoose";
+import { TransactionRequest } from "../types";
+import { handleError } from "../utils/handleErrors";
 
 export const createTransaction = async (
   req: Request,
@@ -13,17 +9,24 @@ export const createTransaction = async (
   _next: NextFunction
 ): Promise<Response> => {
   try {
-    const { detail, buyer_info }: RequestBody = req.body;
-    const total = detail.reduce((a, b) => a + b.price * b.quantity, 0);
-    const addTransaction = new transactionModel({
+    const { detail, buyer_info }: TransactionRequest = req.body;
+    const priceList = detail.map( async (product, index) => {
+      const document = await productModel.findById(product.product_id, "price");
+      const total = document?.price as number * product.quantity;
+      detail[index].price = total;
+      return total;
+    })
+    const readyPriceList = await Promise.all(priceList);
+    const total = readyPriceList.reduce((a, b) => a + b, 0);
+    console.log(detail)
+    const addTransaction = await transactionModel.create({
       detail,
       buyer_info,
       total,
       state: "pending",
     });
-    await addTransaction.save();
     return res.send(addTransaction);
   } catch (error) {
-    return res.status(500).send(error);
+    return handleError(error, res)
   }
 };
