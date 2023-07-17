@@ -1,10 +1,16 @@
 import { NextFunction, Request, Response } from "express";
-import { productModel } from "../mongoose";
-import { Types } from "mongoose";
-import { PreferenceRequest, Product, Size } from "../types";
+import { inventoryModel, productModel, sizeModel } from "../mongoose";
+import {
+  Inventory,
+  PreferenceRequest,
+  Product,
+  Size,
+  TransactionRequest
+} from "../types";
+import { handleError } from "../utils/handleErrors";
 
 type reqBody = {
-  product: string;
+  product: Product;
   image: string;
 };
 
@@ -19,7 +25,7 @@ export const getManyById = async (
     if (productsList.length) return res.send(productsList);
     return res.sendStatus(404);
   } catch (error) {
-    return res.send(error);
+    return handleError(error, res);
   }
 };
 
@@ -32,40 +38,17 @@ export const verifyStock = async (
     const { items }: PreferenceRequest = req.body;
     console.log(req.body);
     let sufficientStock: boolean[] = [];
-    const list = items.map(async (product) => {
-      const item: Size[] = await productModel
-        .aggregate([
-          { $unwind: "$inventary" },
-          { $unwind: "$inventary.sizes" },
-          {
-            $match: {
-              "inventary.sizes._id": new Types.ObjectId(product.id),
-            },
-          },
-          {
-            $limit: 1,
-          },
-          {
-            $project: {
-              _id: "$inventary.sizes._id",
-              size: "$inventary.sizes.size",
-              stock: "$inventary.sizes.stock"
-            },
-          },
-        ])
-        .exec();
-        console.log({ result: item, item: item[0].stock, q: product.quantity});
-      sufficientStock.push(item[0].stock >= (product.quantity || 0));
-      return item;
+    const sizeList = items.map(async (product) => {
+      const size = (await sizeModel.findById(product.id)) as Size;
+      sufficientStock.push(size.stock >= (product.quantity || 0));
+      return size;
     });
-    const ready = await Promise.all(list);
-    const resultsList = ready.flat(1)
+    const readyList = await Promise.all(sizeList);
     console.log({ sufficientStock });
-    if (sufficientStock.includes(false)) return res.status(403).send(resultsList);
+    if (sufficientStock.includes(false)) return res.status(403).send(readyList);
     return next();
   } catch (error) {
-    console.log(error)
-    return res.status(500).send(error);
+    return handleError(error, res);
   }
 };
 
@@ -75,15 +58,24 @@ export const addProduct = async (
   _next: NextFunction
 ): Promise<Response> => {
   try {
-    const product: reqBody = JSON.parse(JSON.stringify(req.body));
-    const info = JSON.parse(product.product);
-    info.image = req.file?.filename as string;
-    delete info._id;
-    const addProduct = new productModel(info);
-    await addProduct.save();
-    return res.send("product added");
+    const { product }: reqBody = req.body;
+    const modelList = product.inventory.map(async (model) => {
+      const sizeList = await sizeModel.insertMany(model.sizes);
+      model.sizes = sizeList.map((size) => {
+        return { _id: size._id as string } as Size;
+      });
+      return model;
+    });
+    const inventoryList = await inventoryModel.insertMany(
+      await Promise.all(modelList)
+    );
+    product.inventory = inventoryList.map((model) => {
+      return { _id: model._id } as Inventory;
+    });
+    const addProduct = await productModel.create(product);
+    return res.send(addProduct);
   } catch (error) {
-    return res.send(error);
+    return handleError(error, res);
   }
 };
 
@@ -98,7 +90,7 @@ export const getAllAvailableProducts = async (
     });
     return res.send(findAllProducts);
   } catch (error) {
-    return res.send(error);
+    return handleError(error, res);
   }
 };
 
@@ -108,10 +100,12 @@ export const getAllProducts = async (
   _next: NextFunction
 ): Promise<Response> => {
   try {
-    const findAllProducts: Product[] = await productModel.find({});
+    const findAllProducts: Product[] = await productModel
+      .find({})
+      .populate({ path: "inventory", populate: { path: "sizes" } });
     return res.send(findAllProducts);
   } catch (error) {
-    return res.send(error);
+    return handleError(error, res);
   }
 };
 
@@ -127,7 +121,7 @@ export const deleteProductById = async (
     if (find) return res.send(find);
     return res.sendStatus(404);
   } catch (error) {
-    return res.send(error);
+    return handleError(error, res);
   }
 };
 
@@ -138,11 +132,13 @@ export const getProductById = async (
 ): Promise<Response> => {
   try {
     const id: string = req.params.id;
-    const find: Product | null = await productModel.findById(id);
+    const find = await productModel
+      .findById(id)
+      .populate({ path: "inventory", populate: { path: "sizes" } });
     if (find) return res.send(find);
     return res.sendStatus(404);
   } catch (error) {
-    return res.send(error);
+    return handleError(error, res);
   }
 };
 
@@ -159,7 +155,7 @@ export const getProductsByCategory = async (
     if (find) return res.send(find);
     return res.sendStatus(404);
   } catch (error) {
-    return res.send(error);
+    return handleError(error, res);
   }
 };
 
@@ -174,6 +170,33 @@ export const modifyProduct = async (
     if (edit) return res.send(edit);
     return res.send(404);
   } catch (error) {
-    return res.send(error);
+    return handleError(error, res);
+  }
+};
+
+export const reserveStock = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    console.log(req.body);
+    const { detail }: TransactionRequest = req.body;
+    const editProducts = detail.map(async (product) => {
+      const editStock = await sizeModel.findByIdAndUpdate(
+        product.size_id,
+        {
+          $inc: { stock: -product.quantity },
+        },
+        { new: true }
+      );
+      return editStock;
+    });
+    const ready = await Promise.all(editProducts);
+    console.log(ready);
+    if (!ready.includes(null)) return next();
+    return res.send(404);
+  } catch (error) {
+    return handleError(error, res);
   }
 };
