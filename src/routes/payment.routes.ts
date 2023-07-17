@@ -4,7 +4,6 @@ import { createPreference, sendFeedback } from "../services/payment.service";
 import * as dotenv from "dotenv";
 import { verifyStock } from "../services/products.service";
 dotenv.config();
-// import { verifyStock } from "../services/products.service";
 
 mercadopago.configure({
   access_token: process.env.TOKEN_MP as string,

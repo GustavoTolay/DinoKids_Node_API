@@ -3,6 +3,7 @@ import mercadopago from "mercadopago";
 import { CreatePreferencePayload } from "mercadopago/models/preferences/create-payload.model";
 import { PreferenceRequest } from "../types";
 import { DateTime } from "luxon";
+import { handleError } from "../utils/handleErrors";
 
 export const createPreference = async (
   req: Request,
@@ -33,8 +34,7 @@ export const createPreference = async (
       id: response.body.id,
     });
   } catch (error) {
-    console.log(error);
-    return res.send(error);
+    return handleError(error, res)
   }
 };
 
@@ -50,6 +50,6 @@ export const sendFeedback = async (
       MerchantOrder: req.query.merchant_order_id,
     });
   } catch (error) {
-    return res.send(error);
+    return handleError(error, res)
   }
 };
