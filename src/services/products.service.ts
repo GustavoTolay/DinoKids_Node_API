@@ -9,11 +9,6 @@ import {
 } from "../types";
 import { handleError } from "../utils/handleErrors";
 
-type reqBody = {
-  product: Product;
-  image: string;
-};
-
 export const getManyById = async (
   req: Request,
   res: Response,
@@ -58,7 +53,8 @@ export const addProduct = async (
   _next: NextFunction
 ): Promise<Response> => {
   try {
-    const { product }: reqBody = req.body;
+    const product: Product = JSON.parse(req.body.product);
+    product.image = req.file?.filename as string
     const modelList = product.inventory.map(async (model) => {
       const sizeList = await sizeModel.insertMany(model.sizes);
       model.sizes = sizeList.map((size) => {
