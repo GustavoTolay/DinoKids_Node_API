@@ -111,11 +111,19 @@ export const deleteProductById = async (
   _next: NextFunction
 ): Promise<Response> => {
   try {
-    const id: string = req.params.id;
-    console.log("hi");
-    const find: Product | null = await productModel.findByIdAndDelete(id);
-    if (find) return res.send(find);
-    return res.sendStatus(404);
+    const { id } = req.params;
+    const product = await productModel.findByIdAndDelete(id);
+    if (!product) return res.sendStatus(404);
+    const sizeList = product.inventory.map(async (model) => {
+      const query = await inventoryModel.findByIdAndDelete(model._id) as Inventory;
+      return query.sizes
+    });
+    const resolvedSizeList = (await Promise.all(sizeList)).flat(1);
+    const sizes = resolvedSizeList.map(async (size) => {
+      return await sizeModel.findByIdAndDelete(size._id)
+    });
+    const resolvedSizes = await Promise.all(sizes)
+    return res.send({ product, resolvedSizes });
   } catch (error) {
     return handleError(error, res);
   }
