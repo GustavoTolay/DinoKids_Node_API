@@ -72,6 +72,32 @@ components:
             properties:
               _id:
                 type: string
+    PopulatedProduct:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+        price:
+          type: string
+        brand:
+          type: string
+        available:
+          type: boolean
+        category:
+          type: string
+        inventory:
+          type: array
+          items:
+            type: object
+            properties:
+              _id:
+                type: string
               model:
                 type: string
               sizes:
