@@ -1,4 +1,9 @@
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT  
   schemas:
     Size:
       type: object
@@ -123,6 +128,8 @@ components:
     summary: create a new product in the database.
     tags:
       - Products
+    security:
+      - bearerAuth: []
     responses:
       "200":
         description: OK
@@ -160,6 +167,8 @@ components:
     summary: deletes a product from the database by the given id.
     tags:
       - Products
+    security:
+      - bearerAuth: []
     parameters:
       - in: path
         name: id
