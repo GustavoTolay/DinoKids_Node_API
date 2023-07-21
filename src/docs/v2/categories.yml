@@ -1,0 +1,60 @@
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Category:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        available:
+          type: boolean
+    NewCategory:
+      type: object
+      properties:
+        name:
+          type: string
+        available:
+          type: boolean
+
+/categories:
+  get:
+    summary: returns information of all the categories.
+    tags:
+      - categories
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/Category"
+  post:
+    summary: creates a new category in the database.
+    tags:
+      - categories
+    security:
+      - bearerAuth: []
+    responses:
+      "200":
+        description: OK
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: category added
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/NewCategory"
+            
+        
