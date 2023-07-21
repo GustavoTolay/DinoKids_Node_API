@@ -123,7 +123,7 @@ components:
             schema:
               type: array
               items:
-                $ref: "#/components/schemas/Product"
+                $ref: "#/components/schemas/PopulatedProduct"
   post:
     summary: create a new product in the database.
     tags:
@@ -136,7 +136,7 @@ components:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Product"
+              $ref: "#/components/schemas/PopulatedProduct"
     requestBody:
       required: true
       content:
@@ -162,7 +162,7 @@ components:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Product"
+              $ref: "#/components/schemas/PopulatedProduct"
   delete:
     summary: deletes a product from the database by the given id.
     tags:
@@ -211,5 +211,5 @@ components:
             schema:
               type: array
               items:
-                $ref: "#/components/schemas/Product"
+                $ref: "#/components/schemas/PopulatedProduct"
                 
