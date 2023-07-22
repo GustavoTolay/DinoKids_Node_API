@@ -51,7 +51,7 @@ export const editModel = async (
   }
 };
 
-export const deleteModel = async (
+export const deleteModelById = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
@@ -95,6 +95,20 @@ export const editSize = async (
       new: true,
     });
     if (editSize) return res.send(editSize);
+    return res.sendStatus(404);
+  } catch (error) {
+    return handleError(error, res);
+  }
+};
+
+export const deleteSizeById = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  try {
+    const { id } = req.params;
+    const deleteSize = await sizeModel.findByIdAndDelete(id)
+    if (deleteSize) return res.send(deleteSize);
     return res.sendStatus(404);
   } catch (error) {
     return handleError(error, res);
