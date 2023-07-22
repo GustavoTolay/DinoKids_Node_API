@@ -45,3 +45,17 @@ export const editModel = async (
     return handleError(error, res);
   }
 };
+
+export const deleteModel = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  try {
+    const { id } = req.params
+    const deleteModel = await inventoryModel.findByIdAndDelete(id);
+    if (deleteModel) return res.send(deleteModel);
+    return res.sendStatus(404);
+  } catch (error) {
+    return handleError(error, res);
+  }
+};
