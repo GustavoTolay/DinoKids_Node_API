@@ -83,3 +83,20 @@ export const addSize = async (
     return handleError(error, res);
   }
 };
+
+export const editSize = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  try {
+    const { size }: sizeReq = req.body;
+    const { _id, ...query } = size;
+    const editSize = await sizeModel.findByIdAndUpdate(size._id, query, {
+      new: true,
+    });
+    if (editSize) return res.send(editSize);
+    return res.sendStatus(404);
+  } catch (error) {
+    return handleError(error, res);
+  }
+};
