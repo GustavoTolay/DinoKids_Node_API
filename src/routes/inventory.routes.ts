@@ -1,5 +1,5 @@
 import express from "express";
-import { addModel, deleteModel, editModel } from "../services/inventory.service";
+import { addModel, addSize, deleteModel, editModel } from "../services/inventory.service";
 import { verifyUser } from "../services/auth.service";
 
 const router = express.Router()
@@ -11,3 +11,5 @@ router.post("/model", verifyUser, addModel)
 router.put("/model", verifyUser, editModel)
 
 router.delete("/model", verifyUser, deleteModel)
+
+router.post("/size", verifyUser, addSize)

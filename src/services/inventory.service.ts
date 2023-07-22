@@ -1,11 +1,16 @@
 import { Request, Response } from "express";
-import { Inventory } from "../types";
+import { Inventory, Size } from "../types";
 import { handleError } from "../utils/handleErrors";
-import { inventoryModel, productModel } from "../mongoose";
+import { inventoryModel, productModel, sizeModel } from "../mongoose";
 
 type modelReq = {
   model: Inventory;
   product_id?: string;
+};
+
+type sizeReq = {
+  size: Size;
+  model_id?: string;
 };
 
 export const addModel = async (
@@ -51,9 +56,28 @@ export const deleteModel = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const { id } = req.params
+    const { id } = req.params;
     const deleteModel = await inventoryModel.findByIdAndDelete(id);
     if (deleteModel) return res.send(deleteModel);
+    return res.sendStatus(404);
+  } catch (error) {
+    return handleError(error, res);
+  }
+};
+
+export const addSize = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  try {
+    const { size, model_id }: sizeReq = req.body;
+    const addSize = await sizeModel.create(size);
+    const editModel = await inventoryModel.findByIdAndUpdate(
+      model_id,
+      { $push: { sizes: { _id: addSize._id } } },
+      { new: true }
+    );
+    if (editModel) return res.send(addSize);
     return res.sendStatus(404);
   } catch (error) {
     return handleError(error, res);
