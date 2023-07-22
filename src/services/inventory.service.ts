@@ -39,7 +39,7 @@ export const editModel = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const { model }: modelReq = req.body;
+    const model: Inventory = req.body;
     const { _id, ...query } = model;
     const editModel = await inventoryModel.findByIdAndUpdate(_id, query, {
       new: true,
@@ -89,7 +89,7 @@ export const editSize = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const { size }: sizeReq = req.body;
+    const size: Size = req.body;
     const { _id, ...query } = size;
     const editSize = await sizeModel.findByIdAndUpdate(size._id, query, {
       new: true,
