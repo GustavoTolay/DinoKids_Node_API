@@ -6,14 +6,14 @@ const router = express.Router()
 
 export default router
 
-router.post("/model", verifyUser, addModel)
+router.post("/models", verifyUser, addModel)
 
-router.put("/model", verifyUser, editModel)
+router.put("/models", verifyUser, editModel)
 
-router.delete("/model", verifyUser, deleteModelById)
+router.delete("/models", verifyUser, deleteModelById)
 
-router.post("/size", verifyUser, addSize)
+router.post("/sizes", verifyUser, addSize)
 
-router.put("/size", verifyUser, editSize)
+router.put("/sizes", verifyUser, editSize)
 
-router.delete("/size", verifyUser, deleteSizeById)
+router.delete("/sizes", verifyUser, deleteSizeById)
