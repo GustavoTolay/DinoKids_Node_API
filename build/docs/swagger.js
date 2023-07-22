@@ -11,7 +11,7 @@ const options = {
         openapi: "3.0.0",
         info: { title: "DinoKids API", version: "2.0.0" },
     },
-    apis: ["./src/docs/*.yml"]
+    apis: ["./src/docs/v2/*.yml"]
 };
 const swaggerSpec = (0, swagger_jsdoc_1.default)(options);
 const swaggerDocs = (app, port) => {
