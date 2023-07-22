@@ -1,0 +1,184 @@
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Size:
+      type: object
+      properties:
+        _id: 
+          type: string
+        size:
+          type: string
+        stock: 
+          type: number
+        weight:
+          type: number
+    NewSize:
+      type: object
+      properties:
+        size:
+          type: string
+        stock: 
+          type: number
+        weight:
+          type: number
+    Model:
+      type: object
+      properties:
+        _id: 
+          type: string
+        name:
+          type: string
+        sizes:
+          type: array
+          items:
+            $ref: "#/components/schemas/Size"
+    NewModel:
+      type: object
+      properties:
+        name:
+          type: string
+        sizes:
+          type: array
+          items:
+            type: object
+            properties:
+              _id: string
+
+/models:
+  post:
+    summary: create a new model for an existing product in the database.
+    tags:
+      - Models
+    security:
+      - bearerAuth: []
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Model"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              model:
+                $ref: "#/components/schemas/NewModel"
+              product_id:
+                type: string
+  put:
+    summary: update a model in the database.
+    tags:
+      - Models
+    security:
+      - bearerAuth: []
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Model"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/NewModel"
+
+/models/{id}:
+  delete:
+    summary: delete a model in the database.
+    tags:
+      - Models
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: id of the model to delete
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Model"
+
+/sizes:
+  post:
+    summary: create a new size for an existing model in the database.
+    tags:
+      - Sizes
+    security:
+      - bearerAuth: []
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Size"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              size:
+                $ref: "#/components/schemas/NewSize"
+              model_id:
+                type: string
+  put:
+    summary: updates a size in the database.
+    tags:
+      - Sizes
+    security:
+      - bearerAuth: []
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Size"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Size"
+
+/sizes/{id}:
+  delete:
+    summary: deletes a size in the database.
+    tags:
+      - Sizes
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: id of the size to delete
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Size"
+    
