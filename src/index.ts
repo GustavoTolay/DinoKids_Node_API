@@ -9,7 +9,7 @@ import * as dotenv from "dotenv";
 import path from "path";
 import swaggerDocs from "./docs/swagger";
 import transactionsRouter from "./routes/transactions.routes";
-import inventoryRouter from "./routes/inventory.routes"
+import { modelRouter, sizeRouter } from "./routes/inventory.routes"
 
 dotenv.config();
 
@@ -52,7 +52,8 @@ app.use("/auth", authRouter);
 app.use("/categories", categoriesRouter);
 app.use("/payment", paymentRouter);
 app.use("/transactions", transactionsRouter);
-app.use("/inventory", inventoryRouter)
+app.use("/sizes", sizeRouter)
+app.use("/models", modelRouter)
 
 app.listen(PORT, () => {
   console.log(`server listening on port ${PORT}`);

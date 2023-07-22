@@ -1,19 +1,25 @@
 import express from "express";
-import { addModel, addSize, deleteModelById, deleteSizeById, editModel, editSize } from "../services/inventory.service";
+import {
+  addModel,
+  addSize,
+  deleteModelById,
+  deleteSizeById,
+  editModel,
+  editSize,
+} from "../services/inventory.service";
 import { verifyUser } from "../services/auth.service";
 
-const router = express.Router()
+export const modelRouter = express.Router();
+export const sizeRouter = express.Router();
 
-export default router
+modelRouter.post("/", verifyUser, addModel);
 
-router.post("/models", verifyUser, addModel)
+modelRouter.put("/", verifyUser, editModel);
 
-router.put("/models", verifyUser, editModel)
+modelRouter.delete("/", verifyUser, deleteModelById);
 
-router.delete("/models", verifyUser, deleteModelById)
+sizeRouter.post("/", verifyUser, addSize);
 
-router.post("/sizes", verifyUser, addSize)
+sizeRouter.put("/", verifyUser, editSize);
 
-router.put("/sizes", verifyUser, editSize)
-
-router.delete("/sizes", verifyUser, deleteSizeById)
+sizeRouter.delete("/", verifyUser, deleteSizeById);
