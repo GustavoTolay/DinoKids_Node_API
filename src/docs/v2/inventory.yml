@@ -46,7 +46,8 @@ components:
           items:
             type: object
             properties:
-              _id: string
+              _id:
+                type: string
 
 /models:
   post:
