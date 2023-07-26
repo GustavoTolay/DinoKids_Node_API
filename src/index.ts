@@ -39,7 +39,8 @@ app.get(
     "/edititem/:id",
     "/addcategory",
     "/additem",
-    "/checkout"
+    "/checkout",
+    "/contact"
   ],
   (_req, res) => {
     res.sendFile(path.join(__dirname, "..", "public", "dist", "index.html"));
