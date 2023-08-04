@@ -30,16 +30,19 @@ components:
       properties:
         _id: 
           type: string
-        name:
+        model:
           type: string
         sizes:
           type: array
           items:
-            $ref: "#/components/schemas/Size"
+            type: object
+            properties:
+              _id:
+                type: string
     NewModel:
       type: object
       properties:
-        name:
+        model:
           type: string
         sizes:
           type: array
@@ -92,11 +95,11 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/NewModel"
+            $ref: "#/components/schemas/Model"
 
 /models/{id}:
   delete:
-    summary: delete a model in the database.
+    summary: delete a model in the database and its nested sizes.
     tags:
       - Models
     security:
@@ -114,7 +117,14 @@ components:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Model"
+              type: object
+              properties:
+                deleteModel:
+                  $ref: "#/components/schemas/Model"
+                resolvedSizes:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Size"
 
 /sizes:
   post:
