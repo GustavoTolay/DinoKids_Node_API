@@ -165,7 +165,7 @@ export const getProductsByCategory = async (
   }
 };
 
-export const modifyProduct = async (
+export const editProduct = async (
   req: Request,
   res: Response,
   _next: NextFunction

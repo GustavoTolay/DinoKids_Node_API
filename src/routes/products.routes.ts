@@ -5,7 +5,7 @@ import {
   getAllProducts,
   getProductById,
   getProductsByCategory,
-  modifyProduct,
+  editProduct,
   getManyById
 } from "../services/products.service";
 import { verifyUser } from "../services/auth.service";
@@ -26,7 +26,7 @@ router.post("/", upload.single("image"), resizeImage, verifyUser, addProduct);
 
 router.delete("/:id", verifyUser, deleteProductById);
 
-router.put("/", verifyUser, modifyProduct);
+router.put("/", verifyUser, editProduct);
 
 // router.post("/test", addProduct)
 
