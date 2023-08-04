@@ -27,7 +27,7 @@ export const addModel = async (
       },
       { new: true }
     );
-    if (editProduct) return res.send(editProduct);
+    if (editProduct) return res.send(addModel);
     return res.sendStatus(404);
   } catch (error) {
     return handleError(error, res);
@@ -58,8 +58,13 @@ export const deleteModelById = async (
   try {
     const { id } = req.params;
     const deleteModel = await inventoryModel.findByIdAndDelete(id);
-    if (deleteModel) return res.send(deleteModel);
-    return res.sendStatus(404);
+    if (!deleteModel) return res.sendStatus(404);
+    const sizeList = deleteModel.sizes.map(async (size) => {
+      const deleteSize = await sizeModel.findByIdAndDelete(size._id);
+      return deleteSize
+    });
+    const resolvedSizes = await Promise.all(sizeList);
+    return res.send({ deleteModel, resolvedSizes });
   } catch (error) {
     return handleError(error, res);
   }
