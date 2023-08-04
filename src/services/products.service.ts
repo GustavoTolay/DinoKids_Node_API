@@ -55,6 +55,8 @@ export const addProduct = async (
   try {
     const product: Product = JSON.parse(req.body.product);
     product.image = req.file?.filename as string
+    // const product: Product = req.body.product;
+    // product.image = "testString";
     const modelList = product.inventory.map(async (model) => {
       const sizeList = await sizeModel.insertMany(model.sizes);
       model.sizes = sizeList.map((size) => {
