@@ -28,4 +28,6 @@ router.delete("/:id", verifyUser, deleteProductById);
 
 router.put("/", verifyUser, modifyProduct);
 
+// router.post("/test", addProduct)
+
 export default router;

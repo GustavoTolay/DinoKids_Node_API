@@ -3,6 +3,11 @@ import { userModel } from "../mongoose";
 import { generateToken, verifyToken } from "../middlewares/jwt";
 import { User } from "../types";
 
+import * as dotenv from "dotenv";
+dotenv.config();
+const mode = process.env.APP_MODE;
+console.log({ mode });
+
 type userToken = {
   email: string;
 };
@@ -36,6 +41,7 @@ export const verifyUser = async (
   next: NextFunction
 ): Promise<Response | void> => {
   try {
+    if(mode == "testing") return next();
     const header = req.headers.authorization;
     if (header) {
       const token = header.split(" ")[1];
