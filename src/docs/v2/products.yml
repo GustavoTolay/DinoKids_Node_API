@@ -143,6 +143,23 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/NewProduct"
+  put:
+    summary: edit the information of a product in the database.
+    tags:
+      - Products
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Product"
 
 /products/{id}:
   get:

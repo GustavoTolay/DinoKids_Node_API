@@ -165,14 +165,14 @@ export const getProductsByCategory = async (
   }
 };
 
-export const modifyProduct = async (
+export const editProduct = async (
   req: Request,
   res: Response,
   _next: NextFunction
 ): Promise<Response> => {
   try {
     const product: Product = req.body;
-    const edit = await productModel.findByIdAndUpdate(product._id, product);
+    const edit = await productModel.findByIdAndUpdate(product._id, product, { new: true });
     if (edit) return res.send(edit);
     return res.send(404);
   } catch (error) {
