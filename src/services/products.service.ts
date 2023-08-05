@@ -172,7 +172,7 @@ export const editProduct = async (
 ): Promise<Response> => {
   try {
     const product: Product = req.body;
-    const edit = await productModel.findByIdAndUpdate(product._id, product);
+    const edit = await productModel.findByIdAndUpdate(product._id, product, { new: true });
     if (edit) return res.send(edit);
     return res.send(404);
   } catch (error) {
