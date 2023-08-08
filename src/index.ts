@@ -10,7 +10,6 @@ import path from "path";
 import swaggerDocs from "./docs/swagger";
 import transactionsRouter from "./routes/transactions.routes";
 import { modelRouter, sizeRouter } from "./routes/inventory.routes";
-import compression from "compression";
 
 dotenv.config();
 
@@ -25,7 +24,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static("public"));
 app.use(express.static("public/dist"));
-app.use(compression());
 
 app.get("/hello", (_req, res) => {
   console.log("someone pinged here!!!");
