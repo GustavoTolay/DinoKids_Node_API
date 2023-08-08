@@ -1,0 +1,1 @@
+.whatsapp_div{position:fixed;bottom:30px;right:30px}.whatsapp_icon{height:60px;border-radius:50%;box-shadow:0 5px 5px #0000005d}.whatsapp_icon:hover{-webkit-transform:scale(1.1);-ms-transform:scale(1.1);transform:scale(1.1);transition:.5s;z-index:10}@media (max-width: 575px){.whatsapp_div{position:fixed;bottom:120px;right:20px}}
