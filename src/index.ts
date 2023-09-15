@@ -10,6 +10,7 @@ import path from "path";
 import swaggerDocs from "./docs/swagger";
 import transactionsRouter from "./routes/transactions.routes";
 import { modelRouter, sizeRouter } from "./routes/inventory.routes";
+import connectWhatsapp from "./whatsapp";
 
 dotenv.config();
 
@@ -62,3 +63,5 @@ app.listen(PORT, () => {
 });
 
 DbConnect();
+
+connectWhatsapp();
