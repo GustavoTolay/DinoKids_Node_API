@@ -13,7 +13,7 @@ type MessagePayload = {
   options?: MessageSendOptions;
 };
 
-const client = new Client({});
+const client = new Client({ puppeteer: { args: ["--no-sandbox"] } });
 const sendMessageAt = [8, 13, 21];
 const messagesToSend: MessagePayload[] = [
   {
